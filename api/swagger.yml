@@ -1,0 +1,18 @@
+openapi: "3.0.2"
+info:
+  title: Whatsapp Bot Scheduler
+  version: "1.0"
+  description: REST Api documentation for development testing
+servers:
+  - url: http://127.0.0.1:8000/api/v1
+paths:
+  /job:
+    post:
+      responses:
+        "200":
+          description: OK
+
+    get:
+      responses:
+        "200":
+          description: OK
