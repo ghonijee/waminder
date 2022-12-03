@@ -1,0 +1,656 @@
+openapi: 3.0.0
+info:
+  title: WhatsApp API MultiDevice
+  version: 3.0.0
+  description: This API is used for sending whatsapp via API
+servers:
+  - url: http://localhost:3000
+tags:
+  - name: auth
+    description: Initial Connection to Whatsapp server
+  - name: user
+    description: Getting information
+  - name: message
+    description: Send or Manipulate Message (Text/Image/File/Video).
+paths:
+  /app/login:
+    get:
+      operationId: authLogin
+      tags:
+        - auth
+      summary: Login to whatsapp server
+      responses:
+        "200":
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Fri, 11 Feb 2022 02:38:34 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Content-Length:
+              schema:
+                type: integer
+                example: "166"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: Success
+                results:
+                  qr_duration: 30
+                  qr_link: >-
+                    http://localhost:3000/statics/images/qrcode/scan-qr-b0b7bb43-9a22-455a-814f-5a225c743310.png
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServer"
+  /app/logout:
+    get:
+      operationId: authLogout
+      tags:
+        - auth
+      summary: Remove database and logout
+      responses:
+        "200":
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Fri, 11 Feb 2022 03:44:15 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Content-Length:
+              schema:
+                type: integer
+                example: "54"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: Success logout
+                results: null
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServer"
+  /app/reconnect:
+    get:
+      operationId: authReconnect
+      tags:
+        - auth
+      summary: Reconnecting to whatsapp server
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServer"
+  /user/info:
+    get:
+      operationId: userInfo
+      tags:
+        - user
+      summary: User Info
+      parameters:
+        - name: phone
+          in: query
+          schema:
+            type: integer
+          example: "6289685028129@s.whatsapp.net"
+      responses:
+        "200":
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Sun, 13 Feb 2022 05:46:55 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Content-Length:
+              schema:
+                type: integer
+                example: "394"
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: Success
+                results:
+                  verified_name: ""
+                  status: you are blocked
+                  picture_id: "1635239861"
+                  devices:
+                    - User: "6289685028129@s.whatsapp.net"
+                      Agent: 0
+                      Device: UNKNOWN
+                      Server: s.whatsapp.net
+                      AD: true
+                    - User: "6289685028129@s.whatsapp.net"
+                      Agent: 0
+                      Device: SAFARI
+                      Server: s.whatsapp.net
+                      AD: true
+                    - User: "6289685028129@s.whatsapp.net"
+                      Agent: 0
+                      Device: IPAD
+                      Server: s.whatsapp.net
+                      AD: true
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequest"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServer"
+  /user/avatar:
+    get:
+      operationId: userAvatar
+      tags:
+        - user
+      summary: User Avatar
+      parameters:
+        - name: phone
+          in: query
+          schema:
+            type: integer
+          example: "6289685028129@s.whatsapp.net"
+      responses:
+        "200":
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Fri, 11 Feb 2022 03:43:39 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Content-Length:
+              schema:
+                type: integer
+                example: "244"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: Success
+                results:
+                  url: >-
+                    https://pps.whatsapp.net/v/t61.24694-24/181358562_385581386633509_6230178822944778044_n.jpg?ccb=11-4&oh=df36c5b990497b8a5758a0f1ad8118a8&oe=620AA726
+                  id: "1635239861"
+                  type: image
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequest"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServer"
+  /user/my/privacy:
+    get:
+      operationId: userMyPrivacy
+      tags:
+        - user
+      summary: User My Privacy Setting
+      responses:
+        "200":
+          description: OK
+          headers:
+            Date:
+              schema:
+                type: string
+                example: Sun, 13 Feb 2022 04:01:41 GMT
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Content-Length:
+              schema:
+                type: integer
+                example: "147"
+            Vary:
+              schema:
+                type: string
+                example: Origin
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: Success get privacy
+                results:
+                  group_add: all
+                  last_seen: ""
+                  status: all
+                  profile: contacts
+                  read_receipts: all
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServer"
+  /user/my/groups:
+    get:
+      operationId: userMyGroups
+      tags:
+        - user
+      summary: User My List Groups
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServer"
+  /send/message:
+    post:
+      operationId: sendMessage
+      tags:
+        - message
+      summary: Send Message
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: integer
+                  example: "6289685028129@s.whatsapp.net"
+                  description: Phone number with country code
+                message:
+                  type: string
+                  example: selamat malam
+                  description: Message to send
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequest"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServer"
+  /send/image:
+    post:
+      operationId: sendImage
+      tags:
+        - message
+      summary: Send Image
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: integer
+                  example: "6289685028129@s.whatsapp.net"
+                  description: Phone number with country code
+                caption:
+                  type: string
+                  example: selamat malam
+                  description: Caption to send
+                view_once:
+                  type: boolean
+                  example: false
+                  description: View once
+                image:
+                  type: string
+                  format: binary
+                  description: Image to send
+                compress:
+                  type: boolean
+                  example: false
+                  description: Compress image
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequest"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServer"
+  /send/file:
+    post:
+      operationId: sendFile
+      tags:
+        - message
+      summary: Send File
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: integer
+                  example: "6289685028129@s.whatsapp.net"
+                  description: Phone number with country code
+                caption:
+                  type: string
+                  example: selamat malam
+                  description: Caption to send
+                file:
+                  type: string
+                  format: binary
+                  description: File to send
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequest"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServer"
+  /send/video:
+    post:
+      operationId: sendVideo
+      tags:
+        - message
+      summary: Send Video
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: integer
+                  example: "6289685028129@s.whatsapp.net"
+                  description: Phone number with country code
+                caption:
+                  type: string
+                  example: ini contoh caption video
+                  description: Caption to send
+                view_once:
+                  type: boolean
+                  example: "false"
+                  description: View once
+                video:
+                  type: string
+                  format: binary
+                  description: Video to send
+                compress:
+                  type: boolean
+                  example: "false"
+                  description: Compress video
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequest"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServer"
+  /send/contact:
+    post:
+      operationId: sendContact
+      tags:
+        - message
+      summary: Send Contact
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: integer
+                  example: "6289685024051@s.whatsapp.net"
+                  description: Phone number with country code
+                contact_name:
+                  type: string
+                  example: Aldino Kemal
+                  description: Contact name
+                contact_phone:
+                  type: string
+                  example: "6289685024992"
+                  description: Contact phone number
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequest"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServer"
+  /send/link:
+    post:
+      operationId: sendLink
+      tags:
+        - message
+      summary: Send Link
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: integer
+                  example: "6289685024051@s.whatsapp.net"
+                  description: Phone number with country code
+                link:
+                  type: string
+                  example: "https://google.com"
+                  description: Link to send
+                caption:
+                  type: string
+                  example: "Halo ini contoh caption"
+                  description: Caption to send
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequest"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServer"
+  /message/:message_id/revoke:
+    post:
+      operationId: revokeMessage
+      tags:
+        - message
+      summary: Send Link
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: integer
+                  example: "6289685024051@s.whatsapp.net"
+                  description: Phone number with country code
+                message_id:
+                  type: string
+                  example: "3EB007D87686670344D7"
+                  description: Message ID
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBadRequest"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInternalServer"
+
+components:
+  schemas:
+    SendResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Success
+        results:
+          type: object
+          properties:
+            message_id:
+              type: string
+              example: "3EB0B430B6F8F1D0E053AC120E0A9E5C"
+            status:
+              type: string
+              example: "<feature> success ...."
+    ErrorInternalServer:
+      properties:
+        code:
+          type: integer
+          example: 500
+          description: "HTTP Status Code"
+        message:
+          type: string
+          example: you are not loggin
+          description: "Detail error message"
+        results:
+          type: object
+          example: null
+          description: "additional data"
+    ErrorBadRequest:
+      properties:
+        code:
+          type: integer
+          example: 400
+          description: "HTTP Status Code"
+        message:
+          type: string
+          example: phone cannot be blank
+          description: "Detail error message"
+        results:
+          type: object
+          example: null
+          description: "additional data"

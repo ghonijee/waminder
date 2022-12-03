@@ -3,9 +3,10 @@ package messageparse
 import (
 	"errors"
 	"fmt"
+	"log"
+	"regexp"
 	"strings"
 	"time"
-	"whatsapp-bot/pkg/schedule/models"
 )
 
 type MessagePayload struct {
@@ -15,29 +16,62 @@ type MessagePayload struct {
 }
 
 func Parse(body string) (MessagePayload, error) {
-	if !strings.Contains(body, "RemindMe") {
+	funcType := FindFuncType(body)
+	if len(funcType) == 0 {
 		return MessagePayload{}, errors.New("command not found")
 	}
-	content := strings.Split(body, "\n")
-	typeMessage := content[0]
-	message := strings.Split(content[1], ": ")[1]
-	exec_at := strings.Split(content[2], ": ")[1]
-	execAtTime, _ := time.Parse("2006-01-02 15:04:05 MST", exec_at+" WIB")
-	fmt.Println(typeMessage)
-	fmt.Println(message)
-	fmt.Println(exec_at)
+	date, _ := FindDate(body)
+	timeStr, _ := FindTime(body)
+	newDate := GenerateDate(date, timeStr)
+	bodySlice := strings.Split(body, "\n")
+	content := bodySlice[len(bodySlice)-1]
 
 	return MessagePayload{
-		Type:       typeMessage,
-		Message:    message,
-		Execute_at: execAtTime,
+		Type:       funcType,
+		Message:    content,
+		Execute_at: newDate,
 	}, nil
 }
 
-func (m *MessagePayload) ToJob() models.Job {
-	return models.Job{
-		Content:    m.Message,
-		Execute_at: m.Execute_at,
-		IsActive:   true,
+func FindDate(str string) (string, error) {
+	dateRegex, err := regexp.Compile("(([0-1][0-9]|[3][0-1]).([0-5][0-9]).([0-9]{4}))") // Find date
+	if err != nil {
+		log.Fatal("Error")
+		return "", err
 	}
+	findDate := strings.Split(dateRegex.FindString(str), "")
+	findDate[2] = "-"
+	findDate[5] = "-"
+	standartDateString := strings.Join(findDate, "")
+	return standartDateString, nil
+}
+
+func FindTime(str string) (string, error) {
+	timeRegex, err := regexp.Compile("([0-1][0-9]|[2][0-3]):([0-5][0-9])") // Find Jam
+	if err != nil {
+		log.Fatal("Error")
+		return "", err
+	}
+	findTime := timeRegex.FindString(str)
+	return findTime + ":00 WIB", nil
+}
+
+func FindFuncType(str string) string {
+	reg, err := regexp.Compile("\\/\\w*?\\b\n|\\/\\w*?\\b \n")
+	if err != nil {
+		fmt.Println("Error func type parse")
+		return ""
+	}
+	value := reg.FindString(str)
+	return value
+}
+
+func GenerateDate(dateStr string, timeStr string) time.Time {
+	newStr := fmt.Sprintf("%s %s", dateStr, timeStr)
+	dateParse, err := time.Parse("02-01-2006 15:04:05 MST", newStr)
+	if err != nil {
+		log.Println("Error Parse")
+		return time.Now()
+	}
+	return dateParse
 }
