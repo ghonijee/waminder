@@ -6,11 +6,6 @@ import (
 	"whatsapp-bot/pkg/database"
 )
 
-func init() {
-	dbConnect := database.InitMySQL(database.NewConnection())
-	dbConnect.AutoMigrate(&Reminder{})
-}
-
 type Reminder struct {
 	Id              uint `gorm:"primaryKey"`
 	User            string

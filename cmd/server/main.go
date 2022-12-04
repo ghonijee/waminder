@@ -9,7 +9,9 @@ import (
 	"syscall"
 	"time"
 	"whatsapp-bot/internal/router"
+	"whatsapp-bot/internal/types"
 	"whatsapp-bot/internal/whatsappbot"
+	"whatsapp-bot/pkg/database"
 	"whatsapp-bot/pkg/env"
 
 	"github.com/labstack/echo/v4"
@@ -28,6 +30,10 @@ func main() {
 	echo := echo.New()
 	router := routeApiConfig(echo)
 	routeInit(router)
+
+	dbConnect := database.InitMySQL(database.NewConnection())
+	dbConnect.AutoMigrate(&types.Reminder{})
+
 	whatsappbot.Setup(context.Background())
 	var serverConfig Server
 
