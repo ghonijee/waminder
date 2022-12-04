@@ -54,7 +54,7 @@ func checkJobsInInterval(ctx context.Context, duration time.Duration, whatsAppSe
 					whatsAppService.SendMessage(e.User, e.Content)
 					// Disable jobs after called
 					e.DisableReminder()
-					whatsAppService.SendMessage(e.User, "Thanks for using our bot \nWaminderBot")
+					// whatsAppService.SendMessage(e.User, "Thanks for using our bot \nWaminderBot")
 				}
 			}
 		}
