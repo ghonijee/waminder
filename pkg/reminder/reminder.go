@@ -31,27 +31,3 @@ package reminder
 // 	}
 // 	return jobs
 // }
-
-// func CheckJobsInInterval(ctx context.Context, duration time.Duration, whatsAppService waService.WhatsAppService) {
-// 	ticker := time.NewTicker(duration)
-// 	go func() {
-// 		for {
-// 			select {
-// 			case <-ctx.Done():
-// 				ticker.Stop()
-// 				return
-// 			case <-ticker.C:
-// 				log.Println("Ticks Received...")
-// 				jobs := GetJobs()
-// 				for _, e := range jobs {
-// 					// Send Content
-// 					e.Content = e.Content + "\n\nFrom Waminder"
-// 					whatsAppService.SendMessage(e.User, e.Content)
-// 					// Disable jobs after called
-// 					e.IsActive = false
-// 					data.DisableJob(e)
-// 				}
-// 			}
-// 		}
-// 	}()
-// }

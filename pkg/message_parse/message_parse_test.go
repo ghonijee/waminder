@@ -19,5 +19,3 @@ func TestMessageParse(t *testing.T) {
 	}
 	fmt.Println(message)
 }
-
-// find Type

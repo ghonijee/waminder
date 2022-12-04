@@ -2,10 +2,10 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 	"strings"
-	"whatsapp-bot/pkg/whatsapp"
+	"whatsapp-bot/internal/whatsappbot"
+	whatsappPkg "whatsapp-bot/pkg/whatsapp"
 
 	"github.com/labstack/echo/v4"
 	"go.mau.fi/whatsmeow"
@@ -16,14 +16,9 @@ import (
 var WhatsAppDatastore *sqlstore.Container
 var client *whatsmeow.Client
 
-func init() {
-	fmt.Print("Init WhatsApp hanlder")
-
-}
-
 func Index(ctx echo.Context) error {
 	var err error
-	client, err = whatsapp.NewClient()
+	client = whatsappbot.Cli
 	if err != nil {
 		return ctx.JSON(500, err.Error())
 	}
@@ -37,7 +32,7 @@ func Index(ctx echo.Context) error {
 
 func Logut(ctx echo.Context) error {
 	var err error
-	client, err = whatsapp.NewClient()
+	client = whatsappbot.Cli
 	if err != nil {
 		return ctx.JSON(500, err.Error())
 	}
@@ -58,7 +53,6 @@ type RequestLogin struct {
 
 func Login(ctx echo.Context) error {
 	var err error
-	// jid := jwtPayload(c).JID
 
 	var reqLogin RequestLogin
 	reqLogin.Output = strings.TrimSpace(ctx.FormValue("output"))
@@ -66,7 +60,7 @@ func Login(ctx echo.Context) error {
 	if len(reqLogin.Output) == 0 {
 		reqLogin.Output = "html"
 	}
-	client, err = whatsapp.NewClient()
+	client = whatsappbot.Cli
 	if err != nil {
 		return ctx.JSON(500, err.Error())
 	}
@@ -84,7 +78,7 @@ func Login(ctx echo.Context) error {
 
 	_ = client.SendPresence(types.PresenceAvailable)
 
-	qrCode, qrTimeOut := whatsapp.WhatsAppGenerateQR(qrChanGenerate)
+	qrCode, qrTimeOut := whatsappPkg.WhatsAppGenerateQR(qrChanGenerate)
 
 	htmlContent := `
 	<html>

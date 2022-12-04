@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 	"whatsapp-bot/internal/router"
+	"whatsapp-bot/internal/whatsappbot"
 	"whatsapp-bot/pkg/env"
 
 	"github.com/labstack/echo/v4"
@@ -27,12 +28,7 @@ func main() {
 	echo := echo.New()
 	router := routeApiConfig(echo)
 	routeInit(router)
-	// // waClient, err := whatsapp.NewClient()
-	// if err != nil {
-	// 	log.Panic(err)
-	// 	return
-	// }
-	// Get Server Configuration
+	whatsappbot.Setup(context.Background())
 	var serverConfig Server
 
 	serverConfig.Address, err = env.GetEnvString("SERVER_ADDRESS")

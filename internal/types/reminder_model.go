@@ -1,18 +1,23 @@
-package reminder
+package types
 
 import (
-	"fmt"
 	"log"
 	"time"
 	"whatsapp-bot/pkg/database"
 )
 
+func init() {
+	dbConnect := database.InitMySQL(database.NewConnection())
+	dbConnect.AutoMigrate(&Reminder{})
+}
+
 type Reminder struct {
-	Id         uint `gorm:"primaryKey"`
-	User       string
-	Content    string
-	Execute_at time.Time
-	IsActive   bool
+	Id              uint `gorm:"primaryKey"`
+	User            string
+	Content         string
+	Execute_at      time.Time
+	IsActive        bool
+	OriginalMessage string
 }
 
 var dbConnect = database.InitMySQL(database.NewConnection())
@@ -29,7 +34,6 @@ func GetDueReminders() ([]Reminder, error) {
 }
 
 func (data *Reminder) DisableReminder() error {
-	fmt.Println(data.Id)
 	err := dbConnect.Model(&data).Update("is_active", 0).Error
 	if err != nil {
 		log.Panic("Error: " + err.Error())

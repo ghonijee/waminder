@@ -27,7 +27,7 @@ func Parse(body string) (MessagePayload, error) {
 	content := bodySlice[len(bodySlice)-1]
 
 	return MessagePayload{
-		Type:       funcType,
+		Type:       strings.TrimSpace(funcType),
 		Message:    content,
 		Execute_at: newDate,
 	}, nil
