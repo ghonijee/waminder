@@ -22,10 +22,10 @@ func ReadEnv(key string) (string, error) {
 	return value, nil
 }
 
-func GetEnvString(key string) (string, error) {
+func GetEnvString(key string, defaultValue ...string) (string, error) {
 	value, err := ReadEnv(key)
 	if err != nil {
-		return "", err
+		return defaultValue[0], err
 	}
 
 	return value, nil

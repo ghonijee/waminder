@@ -3,7 +3,7 @@ package types
 import (
 	"log"
 	"time"
-	"whatsapp-bot/pkg/database"
+	"whatsapp-bot/internal/database"
 )
 
 type Reminder struct {
