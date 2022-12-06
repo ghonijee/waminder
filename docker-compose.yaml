@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+  waminderbot:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    image: "ghonijee/waminderbot"
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    # restart: 'always'
+    ports:
+      - "8100:8000"

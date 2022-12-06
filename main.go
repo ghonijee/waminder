@@ -20,7 +20,7 @@ func main() {
 
 	serverApp := server.Server{
 		Port:    viper.GetString("SERVER_PORT"),
-		Address: viper.GetString("Server_address"),
+		Address: viper.GetString("SERVER_ADDRESS"),
 	}
 	server.StartRestApp(serverApp, *dbConfigDatabase())
 }
